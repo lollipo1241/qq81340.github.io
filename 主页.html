@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎来到我的主页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", "PingFang SC", sans-serif;
+        }
+        .cover-container {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-image: url("1.jpg");
+            background-size: cover; /* 背景图铺满容器 */
+            background-position: center; /* 背景图居中 */
+            overflow: hidden;
+            /* 动画：页面加载时淡入 */
+            animation: fadeIn 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+        }
+
+        /* 淡入动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0; /* 初始透明 */
+                transform: translateY(20px); /* 初始向下偏移 */
+            }
+            to {
+                opacity: 1; /* 最终不透明 */
+                transform: translateY(0); /* 回到原位 */
+            }
+        }
+        h2{
+            text-align: center;color: white;font-size: 40px;margin-top: 100px;
+        }
+        .grjs {
+            font-size: 25px;
+            text-align: center;
+            color: white;
+            line-height: 1.6;
+            padding: 0 20px;
+            max-width: 800px; /* 限制宽度，避免文字太宽 */
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }       
+        .btn-box {
+            width: 750px; /* 适配3个按钮的宽度 */
+            height: 120px; /* 增加高度，让按钮更舒展 */
+            border: 4px solid rgba(255, 255, 255, 0.8);
+            border-radius: 30px; /* 对应高度调整圆角 */
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-evenly; /* 按钮之间均匀分布 */
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            padding: 0 20px; /* 左右留白，避免按钮贴边 */
+            gap: 10px;
+        }
+        /* 鼠标悬停容器时的效果 */
+        .btn-box:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.03);
+        }
+            .cover-btn {
+            width: 250px;
+            height: 60px;
+            padding: 15px 40px;
+            font-size: 20px;
+            background-color: rgba(255, 255, 255, 0.2); /* 半透明白色 */
+            border: 4px solid white;
+            color: white;
+            border-radius: 50px; /* 圆角按钮 */
+            cursor: pointer; /* 鼠标悬停变手型 */
+            transition: all 0.3s ease; /* 过渡动画，hover时更丝滑 */
+            text-decoration: none; /* 去掉a标签默认下划线 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+            .cover-btn:hover {
+            background-color: white;
+            color: #667eea; /* 文字颜色变主色调 */
+            transform: scale(1.05); /* 轻微放大 */
+        }
+    </style>
+</head>
+<body>
+    <div class="cover-container">
+        <h2> 你好，朋友</h2>
+     <div class="grjs">欢迎来到我的主页，我是一名来自桂林航天工业学院大二的软件工程学生，很高兴你能点进我的主页。&#128522</div>
+     <div class="btn-box">
+            <a href="兴趣爱好.html" class="cover-btn">兴趣爱好&#x2764;&#xFE0F</a>
+            <a href="留言板.html" class="cover-btn">留言板&#x270D;&#x1F3FB</a>
+            </div>
+        </div>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>留言板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", "PingFang SC", sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        /* 容器div样式 */
+        .cover-container {
+            width: 100vw;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #8dcaf3 0%, #ffffff 100%);
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            animation: fadeIn 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            padding: 20px;
+        }
+        .box-1 {
+            width: 90%;
+            max-width: 600px;
+            min-height: 120px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1s ease-in-out 0.2s both;
+            text-align: center;
+        }
+        .box-1 h2 {
+            font-size: 28px;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        .box-1 p {
+            font-size: 16px;
+            color: #718096;
+            line-height: 1.5;
+        }
+        /* 输入框样式 */
+        #inputArea {
+            width: 90%;
+            max-width: 600px;
+            height: 120px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            resize: none;
+            font-size: 16px;
+            color: #2d3748;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease;
+            outline: none;
+        }
+        #inputArea:focus {
+            border-color: #8dcaf3;
+            box-shadow: 0 0 0 3px rgba(141, 202, 243, 0.2);
+        }
+        #inputArea::placeholder {
+            color: #a0aec0;
+        }
+        /* 按钮样式 */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+        }
+        button {
+            border: none;
+            border-radius: 20px;
+            width: 140px;
+            height: 45px;
+            margin: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            background: linear-gradient(135deg, #8dcaf3 0%, #667eea 100%);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, #7cb8e0 0%, #5a6edb 100%);
+        }
+        button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        /* 留言存放区域样式 */
+        .message-box {
+            width: 90%;
+            max-width: 600px;
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        /* 滚动条美化 */
+        .message-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .message-box::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        .message-box::-webkit-scrollbar-thumb {
+            background: #8dcaf3;
+            border-radius: 3px;
+        }
+        .message-box::-webkit-scrollbar-thumb:hover {
+            background: #667eea;
+        }
+        /* 单条留言样式 */
+        .message-item {
+            position: relative;
+            padding: 12px 15px;
+            padding-right: 35px;
+            margin: 8px 0;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            border-left: 3px solid #8dcaf3;
+            font-size: 15px;
+            color: #2d3748;
+            line-height: 1.5;
+            transition: background-color 0.2s ease;
+        }
+        .message-item:hover {
+            background-color: #f1f5f9;
+        }
+        /* 关闭按钮样式 */
+        .close-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #e53e3e;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .close-btn:hover {
+            background-color: #c53030;
+            transform: translateY(-50%) scale(1.1);
+        }
+        /* 淡入动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* 媒体查询适配移动端 */
+        @media (max-width: 768px) {
+            .box-1 {
+                padding: 20px 15px;
+            }
+            .box-1 h2 {
+                font-size: 24px;
+            }
+            button {
+                width: 120px;
+                height: 40px;
+                font-size: 14px;
+            }
+            .message-item {
+                font-size: 14px;
+                padding: 10px 12px;
+                padding-right: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cover-container">
+        <div class="box-1">
+            <h2>留言板</h2>
+            <p>路过我的小小宇宙，不妨留下一句悄悄话，分享你的触动</p>
+        </div>
+        <textarea id="inputArea" placeholder="请填写您的宝贵意见（最多100字）！" maxlength="100"></textarea>
+        <div class="btn-group">
+            <button onclick="sendMessage()">发表留言</button>
+            <button onclick="countMessage()">留言统计</button>
+        </div>
+        <div class="message-box" id="messageBox"></div>
+    </div>
+
+    <script>
+        // 格式化时间（补零）
+        function formatTime(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}/${month}/${day} ${hours}:${minutes}`;
+        }
+
+        // 发表留言
+        function sendMessage() {
+            const input = document.getElementById('inputArea');
+            const content = input.value.trim();
+            
+            // 空内容校验
+            if (!content) {
+                alert('留言内容不能为空哦！');
+                input.focus();
+                return;
+            }
+
+            // 创建留言元素
+            const now = new Date();
+            const timeStr = formatTime(now);
+            const messageItem = document.createElement('div');
+            messageItem.className = 'message-item';
+            messageItem.innerHTML = `${timeStr}: ${content} <span class="close-btn" onclick="deleteMessage(this)">×</span>`;
+            
+            // 添加到留言区并滚动到底部
+            const messageBox = document.getElementById('messageBox');
+            messageBox.appendChild(messageItem);
+            messageBox.scrollTop = messageBox.scrollHeight;
+            
+            // 清空输入框
+            input.value = '';
+        }
+
+        // 删除留言
+        function deleteMessage(btn) {
+            // 确认删除
+            if (confirm('确定要删除这条留言吗？')) {
+                btn.parentElement.remove();
+            }
+        }
+
+        // 留言统计
+        function countMessage() {
+            const count = document.querySelectorAll('.message-item').length;
+            const tip = count === 0 ? '暂无留言，快来留下第一条吧！' : `一共发布了${count}条留言`;
+            alert(tip);
+        }
+
+        // 绑定Enter键发表留言（Ctrl+Enter换行，Enter发表）
+        document.getElementById('inputArea').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.ctrlKey) {
+                e.preventDefault(); // 阻止默认换行
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

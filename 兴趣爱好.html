@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>兴趣爱好 - 摄影作品交互展示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", "PingFang SC", sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #ffffff 0%, #e8f4f8 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5vw;
+            z-index: 9999;
+            padding: 1.5vw 2vw;
+            flex-wrap: wrap;
+        }
+        .nav-item {
+            text-decoration: none;
+            font-size: clamp(18px, 2vw, 22px);
+            font-weight: 600;
+            color: #333;
+            padding: 1vw 2vw;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-item:hover {
+            color: #667eea;
+            background-color: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+        .nav-item.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+        body {
+            background-color: #f8f9fa;
+            padding-top: 80px;
+        }
+        .cover-container {
+            width: 100vw;
+            min-height: calc(100vh - 80px);
+            background: linear-gradient(135deg, #e8f4f8 0%, #ffffff 100%);
+            padding: 5vw 2vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 5vw;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .cover-box {
+            width: 90%;
+            min-height: 600px;
+            background: linear-gradient(135deg, #54abdd 0%, #ffffff 100%);
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 4vw;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 3vw;
+            animation: fadeIn 1s ease-in-out;
+            flex-wrap: wrap;
+        }
+        .box-top {
+            width: 80%;
+            min-height: 300px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            box-shadow: 5px 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 4vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: fadeIn 1s ease-in-out 0.2s both;
+        }
+        .box-1, .box-2 {
+            min-width: 300px;
+            width: 45%;
+            min-height: 500px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            box-shadow: 5px 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 3vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 3vw;
+            animation: fadeIn 1s ease-in-out 0.4s both;
+        }
+        .cover-btn {
+            width: clamp(200px, 20vw, 250px);
+            height: clamp(50px, 6vw, 60px);
+            font-size: clamp(24px, 3vw, 30px);
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 4px solid #929191;
+            color: #252424;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-top: 2vw;
+        }
+        .cover-btn:hover {
+            background-color: #ffffff;
+            color: #667eea;
+            transform: scale(1.05);
+            border-color: #667eea;
+        }
+        h2 {
+            font-size: clamp(24px, 3vw, 32px);
+            color: #252424;
+            margin-bottom: 2vw;
+            text-align: center;
+        }
+        h3 {
+            font-style: italic;
+            font-size: clamp(18px, 2vw, 22px);
+            color: #555;
+            margin-bottom: 2.5vw;
+            line-height: 1.6;
+            text-align: center;
+        }
+        p {
+            font-size: clamp(16px, 2vw, 20px);
+            font-weight: 500;
+            line-height: 1.8;
+            color: #333;
+            text-align: justify;
+        }
+        h4 {
+            font-size: clamp(16px, 2vw, 20px);
+            font-weight: 500; 
+            line-height: 1.8; 
+            color: #333;
+            text-align: center;
+            padding: 0 2vw;
+        }
+        .section {
+            width: 100vw;
+            min-height: 100vh;
+            padding: 8vw 5vw;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #e8f4f8 0%, #ffffff 100%);
+        }
+        .section-content {
+            width: 80%;
+            background: #fff;
+            border-radius: 30px;
+            padding: 4vw;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 4vw;
+        }
+        /* 1. 缩略图区域（上半部分） */
+        .photo-thumbnails {
+            width: 95%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 15vw, 180px), 1fr));
+            gap: clamp(10px, 2vw, 20px);
+            margin: 2vw 0;
+            padding: 2vw;
+            background: #fff;
+            border-radius: clamp(20px, 3vw, 30px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        /* 缩略图卡片 */
+        .thumbnail-card {
+            border-radius: clamp(10px, 1.5vw, 15px);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        /* 选中状态的缩略图 */
+        .thumbnail-card.active {
+            border-color: #667eea;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        /* 缩略图hover效果 */
+        .thumbnail-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        /* 缩略图图片容器 */
+        .thumbnail-img {
+            width: 100%;
+            height: 0;
+            padding-bottom: 60%; /* 保持5:3比例 */
+            overflow: hidden;
+            position: relative;
+        }
+        .thumbnail-img img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* 缩略图标题（极简） */
+        .thumbnail-title {
+            padding: clamp(8px, 1vw, 12px);
+            text-align: center;
+            font-size: clamp(12px, 1.2vw, 14px);
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        /* 2. 大图展示区域（下半部分） */
+        .photo-detail {
+            width: 100%;
+            margin: 2vw 0;
+            padding: 10px;
+            background: #fff;
+            border-radius: clamp(20px, 3vw, 30px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3vw;
+            /* 大图切换动画 */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        /* 大图容器 */
+        .detail-img {
+            width: 100%;
+            max-width: clamp(800px, 80vw, 800px);
+            height: 0;
+            padding-bottom: 40%; /* 与缩略图同比例 */
+            overflow: hidden;
+            position: relative;
+            border-radius: clamp(15px, 2vw, 20px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .detail-img img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        /* 大图hover轻微放大 */
+        .detail-img img:hover {
+            transform: scale(1.0);
+        }
+        /* 作品说明区域 */
+        .detail-desc {
+            width: 100%;
+            max-width: clamp(300px, 80vw, 800px);
+            padding: 2vw;
+            background: #f8f9fa;
+            border-radius: clamp(15px, 2vw, 20px);
+        }
+        .detail-desc h5 {
+            font-size: clamp(18px, 2vw, 24px);
+            color: #252424;
+            margin-bottom: 1.5vw;
+            text-align: center;
+        }
+        .detail-desc p {
+            font-size: clamp(16px, 1.5vw, 18px);
+            color: #555;
+            line-height: 1.8;
+            text-align: center;
+        }
+        .music-gallery {
+            width: 90%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin: 30px 0;
+        }
+        /* 黑胶唱片播放器容器 */
+        .vinyl-player {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        .vinyl-player:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        /* 黑胶唱片容器 */
+        .vinyl-disc {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        /* 黑胶唱片底色 */
+        .vinyl-bg {
+            width: 100%;
+            height: 100%;
+            background: #222;
+            border-radius: 50%;
+            position: relative;
+            /* 唱片纹理（径向渐变模拟） */
+            background: radial-gradient(circle, #333 0%, #111 80%);
+            background-image: 
+                repeating-radial-gradient(circle at center, 
+                transparent 0px, 
+                transparent 2px, 
+                #222 2px, 
+                #222 4px);
+        }
+        /* 唱片封面（中间的圆形封面） */
+        .vinyl-cover {
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+            border: 3px solid #333;
+            z-index: 2;
+        }
+        .vinyl-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* 唱片旋转动画 */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        /* 播放时旋转 */
+        .vinyl-disc.playing {
+            animation: spin 8s linear infinite;
+        }
+        /* 播放/暂停按钮 */
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #667eea;
+            color: #fff;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+        .play-btn:hover {
+            background: #5a6edb;
+            transform: scale(1.1);
+        }
+        /* 音乐信息 */
+        .music-info {
+            text-align: center;
+            width: 100%;
+        }
+        .music-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 8px;
+        }
+        .back-top {
+            position: fixed; 
+            bottom: 50px;
+            right: 50px;
+            width: 80px;
+            height: 70px;
+            border-radius: 20%;
+            background-color: #518de7;
+            color: #fff;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+        }
+        .back-top:hover {
+            transform: scale(1.1);
+            background-color: #5a6edb;
+        }
+        /* 媒体查询适配 */
+        @media (min-width: 1200px) {
+            .photo-thumbnails {
+                grid-template-columns: repeat(6, 1fr); /* 大屏6列缩略图 */
+            }
+        }
+        @media (max-width: 1199px) and (min-width: 768px) {
+            .photo-thumbnails {
+                grid-template-columns: repeat(3, 1fr); /* 平板3列缩略图 */
+            }
+        }
+        @media (max-width: 767px) {
+            .photo-thumbnails {
+                grid-template-columns: repeat(2, 1fr); /* 手机2列缩略图 */
+            }
+            .section-content {
+                width: 95%;
+            }
+            .cover-box {
+                width: 95%;
+            }
+            .box-top {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <a href="#home" class="nav-item active">首页</a>
+        <a href="#photography" class="nav-item">摄影区</a>
+        <a href="#music" class="nav-item">音乐区</a>
+        <a href="留言板.html" class="nav-item">留言板</a>
+    </nav>
+    <div class="cover-container" id="home">
+        <div class="box-top">
+            <h2>我的兴趣小记</h2>
+            <h3>于我而言，生活的乐趣藏在镜头里、旋律中，还有银幕的光影之间。</h3>
+            <p>感谢你能点进来&#128522，这里是我的兴趣天地，摄影、音乐、电影，这些看似不相干的爱好，拼凑出了我平凡日子里的所有欢喜。它们不是生活的点缀，而是让我在奔波之余，能慢下来感受世界的温柔出口。</p>
+        </div>
+        <div class="cover-box">
+            <div class="box-1">
+                <a href="#photography" class="cover-btn">摄影&#x1F4F7</a>
+                <p>于我而言，摄影是这份星光的名字。每一次对焦，都是与世界的一次对话：捕捉风的形状，记录光的轨迹，珍藏那些转瞬即逝的美好。相机是我的第三只眼睛，让我看见日常之外的浪漫，也让平凡的日子，因为这些定格的画面，多了许多值得回味的细节……</p>
+            </div>
+            <div class="box-2">
+                <a href="#music" class="cover-btn">听音乐&#x1F3A7</a>
+                <p>音乐是情绪的解药，不同的旋律能接住不同的心情。开心时，节奏是雀跃的心跳；低落时，温柔的曲调能轻轻包裹住所有不安。戴上耳机，世界就成了只属于自己的小小宇宙，那些说不出口的话，都藏在了音符里。</p>
+            </div>
+        </div>
+    </div>
+    <!-- 摄影详情区域（缩略图+大图展示） -->
+    <div class="section" id="photography">
+        <div class="section-content">
+            <h2>摄影：定格瞬间的美好</h2>
+            <h4>不用追求专业的构图和参数，只凭感觉按下快门，记录下当下的心动，就足够珍贵。毕竟，最好的照片，从来不是完美的，而是有温度的。</h4>
+        </div>
+        <h2 style="margin: 3vw 0;">作品展示区</h2>
+        <!-- 上区域：6个缩略图 -->
+        <div class="photo-thumbnails">
+            <!-- 缩略图1 -->
+            <div class="thumbnail-card active" data-id="1">
+                <div class="thumbnail-img">
+                    <img src="1.jpg">
+                </div>
+                <div class="thumbnail-title"></div>
+            </div>
+            <!-- 缩略图2 -->
+            <div class="thumbnail-card" data-id="2">
+                <div class="thumbnail-img">
+                    <img src="2.jpg">
+                </div>
+                <div class="thumbnail-title"></div>
+            </div>
+            <!-- 缩略图3 -->
+            <div class="thumbnail-card" data-id="3">
+                <div class="thumbnail-img">
+                    <img src="3.jpg">
+                </div>
+                <div class="thumbnail-title"></div>
+            </div>
+            <!-- 缩略图4 -->
+            <div class="thumbnail-card" data-id="4">
+                <div class="thumbnail-img">
+                    <img src="4.jpg">
+                </div>
+                <div class="thumbnail-title"></div>
+            </div>
+            <!-- 缩略图5 -->
+            <div class="thumbnail-card" data-id="5">
+                <div class="thumbnail-img">
+                    <img src="5.jpg">
+                </div>
+                <div class="thumbnail-title"></div>
+            </div>
+            <!-- 缩略图6 -->
+            <div class="thumbnail-card" data-id="6">
+                <div class="thumbnail-img">
+                    <img src="6.jpg">
+                </div>
+                <div class="thumbnail-title"></div>
+            </div>
+        </div>
+        <!-- 下区域：大图+说明（默认显示第一个作品） -->
+        <div class="photo-detail" id="photoDetail">
+            <div class="detail-img">
+                <img src="1.jpg" id="detailImg">
+            </div>
+            <div class="detail-desc" id="detailDesc">
+                <h5></h5>
+                <p></p>
+            </div>
+        </div>
+    </div>
+        <!-- 音乐详情区域（6个黑胶唱片播放器） -->
+    <div class="section" id="music">
+        <div class="section-content">
+            <h2>音乐：治愈生活的旋律</h2>
+            <h4>无论是清晨通勤的地铁，还是深夜伏案的书桌，抑或是漫步街头的闲暇时刻，总有一段旋律能精准戳中情绪。</h4>
+            <br>
+            <h4>那些说不出口的心事、藏在心底的欢喜、无人知晓的惆怅，都能在音乐里找到共鸣。耳机线是情绪的引线，每一首歌，都是一段心情的注脚，也是独属于我的，对抗平凡生活的浪漫武器。</h4>
+        </div>
+        <h2 style="margin: 30px 0;">我的私藏歌单</h2>
+        <!-- 6个黑胶唱片播放器容器 -->
+        <div class="music-gallery">
+            <div class="vinyl-player">
+                <div class="vinyl-disc" id="vinyl1">
+                    <div class="vinyl-bg"></div>
+                    <div class="vinyl-cover">
+                        <img src="music1.jpg">
+                    </div>
+                    <div class="vinyl-center"></div>
+                </div>
+                <button class="play-btn" onclick="togglePlay(1, this)">▶</button>
+                <div class="music-info">
+                    <div class="music-title">《Hann er ekki þú》- BRÍET</div>
+                    <div class="load-status" id="loadStatus1">等待播放...</div>
+                </div>
+                <!-- 音频元素（隐藏） -->
+                <audio id="audio1" preload="none">
+                    <source src="music1.mp3" type="audio/mpeg">
+                    </audio>
+            </div>
+            <div class="vinyl-player">
+                <div class="vinyl-disc" id="vinyl2">
+                    <div class="vinyl-bg"></div>
+                    <div class="vinyl-cover">
+                        <img src="music2.jpg">
+                    </div>
+                    <div class="vinyl-center"></div>
+                </div>
+                <button class="play-btn" onclick="togglePlay(2, this)">▶</button>
+                <div class="music-info">
+                    <div class="music-title">《Lust For Life》- Lana Del Rey/The Weeknd</div>
+                    <div class="load-status" id="loadStatus2">等待播放...</div>
+                </div>
+                <!-- 音频元素（隐藏） -->
+                <audio id="audio2" preload="none">
+                    <source src="music2.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+            <div class="vinyl-player">
+                <div class="vinyl-disc" id="vinyl3">
+                    <div class="vinyl-bg"></div>
+                    <div class="vinyl-cover">
+                        <img src="music3.jpg">
+                    </div>
+                    <div class="vinyl-center"></div>
+                </div>
+                <button class="play-btn" onclick="togglePlay(3, this)">▶</button>
+                <div class="music-info">
+                    <div class="music-title">《麦恩莉》- 方大同</div>
+                    <div class="load-status" id="loadStatus3">等待播放...</div>
+                </div>
+                <audio id="audio3" preload="none">
+                    <source src="music3.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+            <div class="vinyl-player">
+                <div class="vinyl-disc" id="vinyl4">
+                    <div class="vinyl-bg"></div>
+                    <div class="vinyl-cover">
+                        <img src="music4.jpg">
+                    </div>
+                    <div class="vinyl-center"></div>
+                </div>
+                <button class="play-btn" onclick="togglePlay(4, this)">▶</button>
+                <div class="music-info">
+                    <div class="music-title">《People》- liBianca</div>
+                    <div class="load-status" id="loadStatus4">等待播放...</div>
+                </div>
+                <audio id="audio4" preload="none">
+                    <source src="music4.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+            <div class="vinyl-player">
+                <div class="vinyl-disc" id="vinyl5">
+                    <div class="vinyl-bg"></div>
+                    <div class="vinyl-cover">
+                        <img src="music5.jpg">
+                    </div>
+                    <div class="vinyl-center"></div>
+                </div>
+                <button class="play-btn" onclick="togglePlay(5, this)">▶</button>
+                <div class="music-info">
+                    <div class="music-title">《Work (Derra Flip)》-Derra/Drake/Rihanna </div>
+                    <div class="load-status" id="loadStatus5">等待播放...</div>
+                </div>
+                <audio id="audio5" preload="none">
+                    <source src="music5.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+            <div class="vinyl-player">
+                <div class="vinyl-disc" id="vinyl6">
+                    <div class="vinyl-bg"></div>
+                    <div class="vinyl-cover">
+                        <img src="music6.jpg">
+                    </div>
+                    <div class="vinyl-center"></div>
+                </div>
+                <button class="play-btn" onclick="togglePlay(6, this)">▶</button>
+                <div class="music-info">
+                    <div class="music-title">《Let Go》- Beau Young Prince</div>
+                    <div class="load-status" id="loadStatus6">等待播放...</div>
+                </div>
+                <audio id="audio6" preload="none">
+                    <source src="music6.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. 预设所有作品的信息（图片路径+标题+说明）
+        const photoData = [
+            {
+                id: 1,
+                img: "1.jpg",
+                title: "碧水沉木",
+                desc: "九寨湖水清透如琉璃，枯木静卧水底，青苔覆身，时光仿佛在此刻凝练成一幅静谧的油画。"
+            },
+            {
+                id: 2,
+                img: "2.jpg",
+                title: "九寨秋韵",
+                desc: "彩林垂枝探入九寨碧蓝湖水，游人立栈共赏这方秋景，澄澈的蓝撞着暖黄的叶，是川西秋日最鲜活的模样。"
+            },
+            {
+                id: 3,
+                img: "3.jpg",
+                title: "湖影鎏金",
+                desc: "金黄枝叶悬于澄澈湖面，阳光洒下，将秋韵揉进湖水的蓝绿波纹里，一帧光影，便藏尽九寨的秋日温柔。"
+            },
+            {
+                id: 4,
+                img: "4.jpg",
+                title: "桂山叠翠",
+                desc: "翠色草坪映着镜湖，山水相映成趣，桂林山水的秀雅与壮阔，都融在这一帧江南水墨里。"
+            },
+            {
+                id: 5,
+                img: "5.jpg",
+                title: "雪山横黛",
+                desc: "川西雪山刺破云天，雪线在峰峦间勾勒出凌厉的棱线，墨绿林海衬着皑雪，尽展高原山脉的磅礴与苍劲。"
+            },
+            {
+                id: 6,
+                img: "6.jpg",
+                title: "湖影欧风",
+                desc: "流云漫过天际，枝叶轻垂湖畔，东莞松山湖的这一隅，藏着不输欧洲的浪漫与静谧。"
+            }
+        ];
+        let currentPlayingId = null;
+        // 2. 滚动时高亮当前导航项
+        window.addEventListener('scroll', function() {
+            const homeSection = document.getElementById('home');
+            const photoSection = document.getElementById('photography');
+            const musicSection = document.getElementById('music');
+            const scrollTop = window.pageYOffset;
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            if (scrollTop < photoSection.offsetTop - 100) {
+                navItems[0].classList.add('active');
+            } else if (scrollTop < musicSection.offsetTop - 100) {
+                navItems[1].classList.add('active');
+            } else {
+                navItems[2].classList.add('active');
+            }
+        })
+        // 4. 缩略图点击切换大图逻辑
+        const thumbnailCards = document.querySelectorAll('.thumbnail-card');
+        const detailImg = document.getElementById('detailImg');
+        const detailDesc = document.getElementById('detailDesc');
+        const photoDetail = document.getElementById('photoDetail');
+
+        thumbnailCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // 移除所有缩略图的选中状态
+                thumbnailCards.forEach(c => c.classList.remove('active'));
+                // 给当前点击的缩略图添加选中状态
+                this.classList.add('active');
+                
+                // 获取当前点击作品的ID
+                const photoId = parseInt(this.getAttribute('data-id'));
+                // 找到对应作品的信息
+                const currentPhoto = photoData.find(item => item.id === photoId);
+                
+                // 更新大图和说明
+                detailImg.src = currentPhoto.img;
+                detailImg.alt = currentPhoto.title;
+                detailDesc.innerHTML = `
+                    <h5>${currentPhoto.title}</h5>
+                    <p>${currentPhoto.desc}</p>
+                `;
+                
+                // 重新触发大图区域的动画
+                photoDetail.style.animation = 'none';
+                setTimeout(() => {
+                    photoDetail.style.animation = 'fadeIn 0.5s ease-in-out';
+                }, 10);
+            });
+        });
+        // 5. 播放/暂停控制（核心功能）
+        function togglePlay(id, btn) {
+            const audio = document.getElementById(`audio${id}`);
+            const vinylDisc = document.getElementById(`vinyl${id}`);
+            const loadStatus = document.getElementById(`loadStatus${id}`);
+
+            // 暂停当前播放的其他音频
+            if (currentPlayingId !== null && currentPlayingId !== id) {
+                pauseAudio(currentPlayingId);
+            }
+
+            if (audio.paused) {
+                // 播放音频
+                audio.play().then(() => {
+                    vinylDisc.classList.add('playing');
+                    btn.textContent = '❚❚';
+                    loadStatus.textContent = '正在播放...';
+                    currentPlayingId = id;
+                }).catch(error => {
+                    loadStatus.textContent = '播放失败，请点击重试';
+                    console.error('播放失败：', error);
+                });
+
+                // 加载中状态
+                if (audio.readyState < 2) {
+                    loadStatus.textContent = '加载中...';
+                    btn.disabled = true;
+                }
+            } else {
+                // 暂停音频
+                pauseAudio(id);
+            }
+
+            // 加载完成
+            audio.oncanplay = function() {
+                btn.disabled = false;
+                if (!audio.paused) {
+                    loadStatus.textContent = '正在播放...';
+                }
+            };
+
+            // 播放结束
+            audio.onended = function() {
+                pauseAudio(id);
+                loadStatus.textContent = '播放完毕';
+            };
+
+            // 加载错误
+            audio.onerror = function() {
+                loadStatus.textContent = '音频加载失败';
+                btn.disabled = false;
+            };
+        }
+
+        // 辅助函数：暂停指定音频
+        function pauseAudio(id) {
+            const audio = document.getElementById(`audio${id}`);
+            const vinylDisc = document.getElementById(`vinyl${id}`);
+            const playBtn = document.querySelector(`.music-gallery .vinyl-player:nth-child(${id}) .play-btn`);
+            const loadStatus = document.getElementById(`loadStatus${id}`);
+
+            audio.pause();
+            vinylDisc.classList.remove('playing');
+            playBtn.textContent = '▶';
+            loadStatus.textContent = '已暂停';
+            if (currentPlayingId === id) {
+                currentPlayingId = null;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 适配手机端，避免页面缩放异常 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人封面</title>
+    <style>
+        /* 全局样式重置：消除浏览器默认的边距和 padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", "PingFang SC", sans-serif;
+        }
+
+        /* 封面页容器：全屏显示 */
+        .cover-container {
+            /* 占满整个浏览器视口 */
+            width: 100vw;
+            height: 100vh;
+            /* 背景：渐变+图片（图片优先级更高，无图片时显示渐变） */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* 替换成你自己的背景图片路径，建议用/images/cover-bg.jpg */
+            /* background-image: url('images/cover-bg.jpg'); */
+            background-image: url("1.jpg");
+            background-size: cover; /* 背景图铺满容器 */
+            background-position: center; /* 背景图居中 */
+            /* 内容垂直+水平居中 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* 文字白色 */
+            color: white;
+            /* 隐藏溢出内容 */
+            overflow: hidden;
+            /* 动画：页面加载时淡入 */
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* 淡入动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0; /* 初始透明 */
+                transform: translateY(20px); /* 初始向下偏移 */
+            }
+            to {
+                opacity: 1; /* 最终不透明 */
+                transform: translateY(0); /* 回到原位 */
+            }
+        }
+
+        /* 名字/昵称样式 */
+        .cover-name {
+            font-size: 4rem; /* 字体大小，rem适配不同屏幕 */
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* 文字阴影，增加层次感 */
+        }
+
+        /* 个性签名样式 */
+        .cover-slogan {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.9; /* 轻微透明，突出名字 */
+        }
+
+        /* 跳转按钮样式 */
+        .cover-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background-color: rgba(255, 255, 255, 0.2); /* 半透明白色 */
+            border: 4px solid white;
+            color: white;
+            border-radius: 50px; /* 圆角按钮 */
+            cursor: pointer; /* 鼠标悬停变手型 */
+            transition: all 0.3s ease; /* 过渡动画，hover时更丝滑 */
+            text-decoration: none; /* 去掉a标签默认下划线 */
+        }
+
+        /* 按钮悬停效果 */
+        .cover-btn:hover {
+            background-color: white;
+            color: #667eea; /* 文字颜色变主色调 */
+            transform: scale(1.05); /* 轻微放大 */
+        }
+        /* 响应式适配：手机端调整字体大小 */
+        @media (max-width: 768px) {
+            .cover-name {
+                font-size: 2.5rem;
+            }
+            .cover-slogan {
+                font-size: 1.2rem;
+            }
+            .cover-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 封面页核心容器 -->
+    <div class="cover-container">
+        <!-- 名字/昵称 -->
+        <div class="cover-name">卿卿</div>
+        <!-- 个性签名 -->
+        <div class="cover-slogan">一个热爱生活的普通人</div>
+        <!-- 跳转主页按钮 -->
+        <a href="主页.html" class="cover-btn">进入我的主页</a>
+    </div>
+</body>
+</html>
